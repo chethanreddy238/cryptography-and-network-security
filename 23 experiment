@@ -1,0 +1,101 @@
+
+
+def sdes_encrypt(plaintext, key):
+   
+    key_schedule = generate_key_schedule(key)
+    
+    
+    counter = 0
+    
+   
+    plaintext_bin = text_to_binary(plaintext)
+    
+   
+    ciphertext = ""
+    
+   
+    for i in range(0, len(plaintext_bin), 8):
+       
+        keystream = generate_keystream(counter, key_schedule)
+        
+        
+        block = plaintext_bin[i:i+8]
+        ciphertext_block = xor_bits(block, keystream)
+        
+        
+        ciphertext += binary_to_text(ciphertext_block)
+        
+       
+        counter += 1
+    
+    return ciphertext
+
+
+def sdes_decrypt(ciphertext, key):
+   
+    key_schedule = generate_key_schedule(key)
+    
+   
+    counter = 0
+    
+   
+    ciphertext_bin = text_to_binary(ciphertext)
+    
+   
+    plaintext = ""
+    
+   
+    for i in range(0, len(ciphertext_bin), 8):
+       
+        keystream = generate_keystream(counter, key_schedule)
+        
+       
+        block = ciphertext_bin[i:i+8]
+        plaintext_block = xor_bits(block, keystream)
+        
+       
+        plaintext += binary_to_text(plaintext_block)
+        
+       
+        counter += 1
+    
+    return plaintext
+
+
+def generate_key_schedule(key):
+    # Perform the initial permutation on the key
+    key_permuted = permute(key, P10)
+    
+   
+    left_key = key_permuted[:5]
+    right_key = key_permuted[5:]
+    
+   
+    subkeys = []
+    for i in range(16):
+       
+        if i == 0 or i == 1 or i == 8 or i == 15:
+            left_key = shift_left(left_key, 1)
+            right_key = shift_left(right_key, 1)
+        else:
+            left_key = shift_left(left_key, 2)
+            right_key = shift_left(right_key, 2)
+        
+       
+        combined_key = left_key + right_key
+        
+       
+        subkey = permute(combined_key, P8)
+        
+       
+        subkeys.append(subkey)
+    
+    return subkeys
+
+
+def generate_keystream(counter, key_schedule):
+    # Convert the counter to binary
+    counter_bin = format(counter, '08b')
+    
+   
+    counter_perm
