@@ -1,0 +1,49 @@
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+
+
+plaintext = b'This is a secret message'
+
+
+key = b'Sixteen byte key!'
+
+
+ecb_cipher = AES.new(key, AES.MODE_ECB)
+
+
+iv = b'0123456789abcdef'
+cbc_cipher = AES.new(key, AES.MODE_CBC, iv)
+
+
+cfb_cipher = AES.new(key, AES.MODE_CFB, iv, segment_size=8)
+
+
+padded_plaintext_ecb = pad(plaintext, AES.block_size)
+padded_plaintext_cbc = pad(plaintext, AES.block_size)
+
+
+padded_plaintext_cfb = pad(plaintext, 8)
+
+
+ciphertext_ecb = ecb_cipher.encrypt(padded_plaintext_ecb)
+
+
+ciphertext_cbc = cbc_cipher.encrypt(padded_plaintext_cbc)
+
+
+ciphertext_cfb = cfb_cipher.encrypt(padded_plaintext_cfb)
+
+
+print("Ciphertext (ECB mode):", ciphertext_ecb.hex())
+print("Ciphertext (CBC mode):", ciphertext_cbc.hex())
+print("Ciphertext (CFB mode):", ciphertext_cfb.hex())
+
+
+decrypted_plaintext_ecb = unpad(ecb_cipher.decrypt(ciphertext_ecb), AES.block_size)
+decrypted_plaintext_cbc = unpad(cbc_cipher.decrypt(ciphertext_cbc), AES.block_size)
+decrypted_plaintext_cfb = unpad(cfb_cipher.decrypt(ciphertext_cfb), 8)
+
+
+print("Decrypted plaintext (ECB mode):", decrypted_plaintext_ecb.decode())
+print("Decrypted plaintext (CBC mode):", decrypted_plaintext_cbc.decode())
+print("Decrypted plaintext (CFB mode):", decrypted_plaintext_cfb.decode())
