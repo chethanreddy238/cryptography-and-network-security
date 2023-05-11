@@ -1,0 +1,87 @@
+
+def permute8(key, perm):
+    return ''.join(key[i-1] for i in perm)
+
+def shift(key, n):
+    return key[n:] + key[:n]
+
+def expand(key):
+    return key[0] + key[1] + key[3] + key[2] + key[3] + key[2] + key[4] + key[5]
+
+def xor(a, b):
+    return ''.join('1' if c1 != c2 else '0' for c1, c2 in zip(a, b))
+
+def S_box(s, input):
+    row = int(input[0] + input[3], 2)
+    col = int(input[1] + input[2], 2)
+    return '{0:02b}'.format(s[row][col])
+
+def f(R, key):
+    R_expanded = expand(R)
+    R_xor_key = xor(R_expanded, key)
+    s0_in = R_xor_key[0:4]
+    s1_in = R_xor_key[4:]
+    s0_out = S_box(s0, s0_in)
+    s1_out = S_box(s1, s1_in)
+    f_out = s0_out + s1_out
+    return permute8(f_out, P4)
+
+
+def generate_keys(key):
+    
+    key = permute8(key, P10)
+
+   
+    left = key[:5]
+    right = key[5:]
+
+   
+    left_shift1 = shift(left, 1)
+    right_shift1 = shift(right, 1)
+    left_shift2 = shift(left_shift1, 2)
+    right_shift2 = shift(right_shift1, 2)
+
+   
+    key_shift1 = left_shift1 + right_shift1
+    key_shift2 = left_shift2 + right_shift2
+
+   
+    K1 = permute8(key_shift1, P8)
+    K2 = permute8(key_shift2, P8)
+
+    return K1, K2
+
+
+def encrypt(plaintext, IV, K1, K2):
+    ciphertext = ''
+    previous = IV
+    for i in range(0, len(plaintext), 8):
+       
+        block = xor(plaintext[i:i+8], previous)
+       
+        block = permute8(block, IP)
+       
+        left = block[:4]
+        right = block[4:]
+        
+        temp = xor(left, f(right, K1))
+        left = right
+        right = temp
+        temp = xor(left, f(right, K2))
+        left = temp
+       
+        block = permute8(left + right, IP_INV)
+       
+        previous = block
+       
+        ciphertext += block
+    return ciphertext
+
+
+def decrypt(ciphertext, IV, K1, K2):
+    plaintext = ''
+    previous = IV
+    for i in range(0, len(ciphertext), 8):
+        # Split block into two halves
+        block = ciphertext[i:i+8]
+        left
