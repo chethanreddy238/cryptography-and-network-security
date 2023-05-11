@@ -1,0 +1,20 @@
+from Crypto.Cipher import DES3
+from Crypto.Util.Padding import pad
+
+
+plaintext = b'This is a secret message'
+
+
+key = b'Sixteen byte key Sixteen byte key'
+
+
+cipher = DES3.new(key, DES3.MODE_ECB)
+
+
+padded_plaintext = pad(plaintext, 8)
+
+
+ciphertext = cipher.encrypt(padded_plaintext)
+
+
+print("Ciphertext:", ciphertext.hex())
