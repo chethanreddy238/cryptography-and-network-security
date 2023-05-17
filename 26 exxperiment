@@ -1,0 +1,52 @@
+import math
+
+def find_prime_factors(n):
+    factors = []
+    for i in range(2, int(n**0.5) + 1):
+        while n % i == 0:
+            factors.append(i)
+            n //= i
+    if n > 1:
+        factors.append(n)
+    return factors
+
+def extended_euclidean_algorithm(a, b):
+    x, y, u, v = 0, 1, 1, 0
+    while b:
+        q, r = divmod(a, b)
+        a, b = b, r
+        x, u = u - q * x, x
+        y, v = v - q * y, y
+    return a, x, y
+
+def multiplicative_inverse(a, m):
+    g, x, y = extended_euclidean_algorithm(a, m)
+    if g != 1:
+        raise ValueError("No multiplicative inverse")
+    return x % m
+
+def main():
+    e = 31
+    n = 3599
+
+    # Find the prime factors of n.
+    factors = find_prime_factors(n)
+    p = factors[0]
+    q = factors[1]
+
+    # Find the multiplicative inverse of 31 modulo f(n).
+    phi_n = (p - 1) * (q - 1)
+    d = multiplicative_inverse(31, phi_n)
+
+    # Encrypt a message.
+    message = "Hello, world!"
+    ciphertext = pow(message, e, n)
+
+    # Decrypt the message.
+    plaintext = pow(ciphertext, d, n)
+
+    # Print the plaintext.
+    print("The plaintext is:", plaintext)
+
+if __name__ == "__main__":
+    main()
