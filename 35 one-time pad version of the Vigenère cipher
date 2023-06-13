@@ -1,0 +1,28 @@
+import random
+
+def vigenere_one_time_pad(plaintext, key):
+  """Encrypts the plaintext using the one-time pad cipher.
+
+  Args:
+    plaintext: The plaintext to encrypt.
+    key: The key, which must be the same length as the plaintext.
+
+  Returns:
+    The encrypted ciphertext.
+  """
+
+  ciphertext = ""
+  for i in range(len(plaintext)):
+    ciphertext += chr((ord(plaintext[i]) + ord(key[i]) - ord('A')) % 26 + ord('A'))
+
+  return ciphertext
+
+def main():
+  plaintext = input("Enter the plaintext: ")
+  key = ''.join([chr(random.randint(0, 25)) for _ in range(len(plaintext))])
+  ciphertext = vigenere_one_time_pad(plaintext, key)
+
+  print("The encrypted ciphertext is:", ciphertext)
+
+if __name__ == "__main__":
+  main()
