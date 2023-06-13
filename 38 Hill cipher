@@ -1,0 +1,73 @@
+import numpy as np
+
+def hill_cipher(plaintext, key):
+  """Encrypts the plaintext using the Hill cipher.
+
+  Args:
+    plaintext: The plaintext to encrypt.
+    key: The key, which must be a square matrix of integers.
+
+  Returns:
+    The encrypted ciphertext.
+  """
+
+  ciphertext = np.dot(plaintext, key) % 26
+  return ciphertext
+
+def main():
+  plaintext = input("Enter the plaintext: ")
+  key = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+  ciphertext = hill_cipher(plaintext, key)
+
+  print("The encrypted ciphertext is:", ciphertext)
+
+if __name__ == "__main__":
+  main()
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+  char *plaintext;
+  int *key;
+  int *ciphertext;
+  int n;
+
+  // Get the plaintext from the user.
+  printf("Enter the plaintext: ");
+  fgets(plaintext, 100, stdin);
+
+  // Get the key from the user.
+  printf("Enter the key: ");
+  fgets(key, 100, stdin);
+
+  // Convert the plaintext and key to arrays.
+  n = strlen(plaintext) - 1;
+  plaintext = malloc(sizeof(char) * n);
+  for (int i = 0; i < n; i++) {
+    plaintext[i] = plaintext[i + 1];
+  }
+  key = malloc(sizeof(int) * n);
+  for (int i = 0; i < n; i++) {
+    key[i] = key[i + 1] - '0';
+  }
+
+  // Encrypt the plaintext using the Hill cipher.
+  ciphertext = malloc(sizeof(int) * n);
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      ciphertext[i] = (ciphertext[i] + plaintext[j] * key[j]) % 26;
+    }
+  }
+
+  // Print the encrypted ciphertext.
+  for (int i = 0; i < n; i++) {
+    printf("%c", ciphertext[i] + 'A');
+  }
+
+  // Free the allocated memory.
+  free(plaintext);
+  free(key);
+  free(ciphertext);
+
+  return 0;
+}
