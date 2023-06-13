@@ -1,0 +1,88 @@
+import random
+
+def generate_random_key():
+  """Generates a random key of the given size.
+
+  Args:
+    size: The size of the key, in bits.
+
+  Returns:
+    The random key.
+  """
+  return random.getrandbits(size * 8)
+
+def des_encrypt(plaintext, key):
+  """Encrypts the given plaintext using the given key.
+
+  Args:
+    plaintext: The plaintext to encrypt.
+    key: The key to use for encrypting the plaintext.
+
+  Returns:
+    The encrypted plaintext.
+  """
+
+  # Initialize the cipher.
+  cipher = DES(key)
+
+  # Encrypt the plaintext.
+  ciphertext = cipher.encrypt(plaintext)
+
+  # Return the encrypted plaintext.
+  return ciphertext
+
+def main():
+  # Generate a plaintext message.
+  plaintext = "Hello, world!"
+
+  # Generate a random key.
+  key = generate_random_key(56)
+
+  # Encrypt the message.
+  ciphertext = des_encrypt(plaintext, key)
+
+  # Print the ciphertext.
+  print(ciphertext)
+
+if __name__ == "__main__":
+  main()
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void des_encrypt(unsigned char *plaintext, unsigned char *key, unsigned char *ciphertext) {
+  // Initialize the cipher.
+  DES_cblock cipher;
+  DES_key_schedule schedule;
+  DES_set_key_unchecked((const unsigned char *)key, &schedule);
+
+  // Encrypt the plaintext.
+  DES_encrypt((const unsigned char *)plaintext, cipher, &schedule);
+
+  // Copy the ciphertext.
+  memcpy(ciphertext, cipher, 8);
+}
+
+int main() {
+  // Generate a plaintext message.
+  unsigned char plaintext[] = "Hello, world!";
+
+  // Generate a random key.
+  unsigned char key[8];
+  for (int i = 0; i < 8; i++) {
+    key[i] = rand() % 256;
+  }
+
+  // Encrypt the message.
+  unsigned char ciphertext[8];
+  des_encrypt(plaintext, key, ciphertext);
+
+  // Print the ciphertext.
+  for (int i = 0; i < 8; i++) {
+    printf("%02x", ciphertext[i]);
+  }
+  printf("\n");
+
+  return 0;
+}
