@@ -1,0 +1,80 @@
+import random
+
+def generate_random_key():
+  """Generates a random key of the given size.
+
+  Args:
+    size: The size of the key, in bits.
+
+  Returns:
+    The random key.
+  """
+  return random.getrandbits(size * 8)
+
+def pad(plaintext, block_size):
+  """Pads the given plaintext to the given block size.
+
+  Args:
+    plaintext: The plaintext to pad.
+    block_size: The size of the blocks to pad to.
+
+  Returns:
+    The padded plaintext.
+  """
+
+  # Calculate the number of padding bits needed.
+  padding_bits = block_size - len(plaintext) % block_size
+
+  # Pad the plaintext with padding bits.
+  padded_plaintext = plaintext + (padding_bits * b'\x00') + b'\x01'
+
+  return padded_plaintext
+
+def encrypt(plaintext, mode, key, block_size):
+  """Encrypts the given plaintext using the given mode, key, and block size.
+
+  Args:
+    plaintext: The plaintext to encrypt.
+    mode: The mode to use for encryption.
+    key: The key to use for encryption.
+    block_size: The size of the blocks to encrypt.
+
+  Returns:
+    The encrypted plaintext.
+  """
+
+  # Pad the plaintext if needed.
+  padded_plaintext = pad(plaintext, block_size)
+
+  # Initialize the cipher.
+  cipher = Cipher(algorithms.AES(key), modes.[mode](block_size))
+
+  # Encrypt the plaintext.
+  ciphertext = cipher.encrypt(padded_plaintext)
+
+  # Return the encrypted plaintext.
+  return ciphertext
+
+def main():
+  # Generate a plaintext message.
+  plaintext = "Hello, world!"
+
+  # Generate a random key.
+  key = generate_random_key(16)
+
+  # Encrypt the message in ECB mode.
+  ciphertext_ecb = encrypt(plaintext, modes.ECB, key, 16)
+
+  # Encrypt the message in CBC mode.
+  ciphertext_cbc = encrypt(plaintext, modes.CBC, key, 16)
+
+  # Encrypt the message in CFB mode.
+  ciphertext_cfb = encrypt(plaintext, modes.CFB, key, 16)
+
+  # Print the ciphertexts.
+  print("ECB:", ciphertext_ecb)
+  print("CBC:", ciphertext_cbc)
+  print("CFB:", ciphertext_cfb)
+
+if __name__ == "__main__":
+  main()
