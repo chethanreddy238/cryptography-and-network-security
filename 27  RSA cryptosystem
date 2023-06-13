@@ -1,0 +1,44 @@
+import rsa
+
+def encrypt(message, public_key):
+  """Encrypts a message using the given public key.
+
+  Args:
+    message: The message to encrypt.
+    public_key: The public key to use for encryption.
+
+  Returns:
+    The encrypted message.
+  """
+  ciphertext = rsa.encrypt(message, public_key)
+  return ciphertext
+
+def decrypt(ciphertext, private_key):
+  """Decrypts a message using the given private key.
+
+  Args:
+    ciphertext: The message to decrypt.
+    private_key: The private key to use for decryption.
+
+  Returns:
+    The decrypted message.
+  """
+  plaintext = rsa.decrypt(ciphertext, private_key)
+  return plaintext
+
+def main():
+  # Generate a public and private key.
+  public_key, private_key = rsa.generate_keys(2048)
+
+  # Alice sends a message to Bob.
+  message = "Hello, Bob!"
+  encrypted_message = encrypt(message, public_key)
+
+  # Bob decrypts the message.
+  decrypted_message = decrypt(encrypted_message, private_key)
+
+  # Print the decrypted message.
+  print(decrypted_message)
+
+if __name__ == "__main__":
+  main()
