@@ -1,0 +1,46 @@
+import random
+
+def generate_secret_number():
+  """Generates a random secret number between 1 and q.
+
+  Returns:
+    The secret number.
+  """
+  return random.randint(1, q)
+
+def compute_shared_secret(a, x):
+  """Computes the shared secret from the given public number a and secret number x.
+
+  Args:
+    a: The public number.
+    x: The secret number.
+
+  Returns:
+    The shared secret.
+  """
+  return pow(a, x, q)
+
+def main():
+  # Generate the public and private keys.
+  a = random.randint(1, q)
+  x = generate_secret_number()
+
+  # Alice sends her public key to Bob.
+  alice_public_key = ax % q
+
+  # Bob sends his public key to Alice.
+  bob_public_key = bx % q
+
+  # Alice computes the shared secret.
+  alice_shared_secret = compute_shared_secret(bob_public_key, x)
+
+  # Bob computes the shared secret.
+  bob_shared_secret = compute_shared_secret(alice_public_key, x)
+
+  # Alice and Bob now have a shared secret that they can use to encrypt and decrypt messages.
+  print("Alice's shared secret:", alice_shared_secret)
+  print("Bob's shared secret:", bob_shared_secret)
+
+if __name__ == "__main__":
+  q = 1000000007
+  main()
