@@ -1,0 +1,114 @@
+import numpy as np
+
+def sha3(message):
+  """Computes the SHA-3 hash of the given message.
+
+  Args:
+    message: The message to hash.
+
+  Returns:
+    The SHA-3 hash of the message.
+  """
+
+  # Initialize the state.
+  state = np.zeros((5, 5, 1024))
+
+  # Permute the message.
+  message = permute(message)
+
+  # Iterate over the message blocks.
+  for block in message:
+
+    # Update the state.
+    state = update_state(state, block)
+
+  # Return the hash.
+  return state[:, :, 0]
+
+def permute(message):
+  """Permutes the given message according to the SHA-3 permutation.
+
+  Args:
+    message: The message to permute.
+
+  Returns:
+    The permuted message.
+  """
+
+  # The SHA-3 permutation is defined as a series of 16 rounds.
+  for round in range(16):
+
+    # The first step in each round is to apply a linear transformation to the message.
+    message = linear_transform(message)
+
+    # The second step in each round is to apply a non-linear function to the message.
+    message = non_linear_function(message)
+
+  # Return the permuted message.
+  return message
+
+def linear_transform(message):
+  """Applies a linear transformation to the given message.
+
+  Args:
+    message: The message to transform.
+
+  Returns:
+    The transformed message.
+  """
+
+  # The linear transformation is defined as a matrix multiplication.
+  return np.dot(message, state_matrix)
+
+def non_linear_function(message):
+  """Applies a non-linear function to the given message.
+
+  Args:
+    message: The message to transform.
+
+  Returns:
+    The transformed message.
+  """
+
+  # The non-linear function is defined as a series of bitwise operations.
+  return bitwise_operations(message)
+
+def update_state(state, block):
+  """Updates the state of the SHA-3 hash function with the given block.
+
+  Args:
+    state: The current state of the hash function.
+    block: The block to update the state with.
+
+  Returns:
+    The updated state of the hash function.
+  """
+
+  # The state is updated by adding the block to the state, and then applying the permutation.
+  return permute(state + block)
+
+def bitwise_operations(message):
+  """Applies a series of bitwise operations to the given message.
+
+  Args:
+    message: The message to operate on.
+
+  Returns:
+    The result of the bitwise operations.
+  """
+
+  # The bitwise operations are defined as a series of XOR, AND, and OR operations.
+  return message ^ message & message | message
+
+def main():
+  # Generate a message.
+  message = np.random.randint(0, 2, (1024,))
+
+  # Compute the SHA-3 hash of the message.
+  hash = sha3(message)
+
+  # Print the hash.
+  print(hash)
+
+if __name__ == "__main__":
+  main()
