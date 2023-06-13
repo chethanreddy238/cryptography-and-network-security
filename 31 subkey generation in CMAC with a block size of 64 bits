@@ -1,0 +1,73 @@
+import random
+
+def generate_random_key():
+  """Generates a random key of the given size.
+
+  Args:
+    size: The size of the key, in bytes.
+
+  Returns:
+    The random key.
+  """
+  return random.getrandbits(size * 8)
+
+def cmac_subkey_generation(key, block_size):
+  """Generates the subkeys for CMAC using the given key and block size.
+
+  Args:
+    key: The key to use for generating the subkeys.
+    block_size: The size of the blocks, in bits.
+
+  Returns:
+    A tuple of the two subkeys.
+  """
+
+  # Initialize the IV.
+  iv = generate_random_key(block_size // 8)
+
+  # Encrypt the IV using the key.
+  ciphertext = encrypt(iv, key)
+
+  # Split the ciphertext into two halves.
+  subkey1 = ciphertext[:block_size // 8]
+  subkey2 = ciphertext[block_size // 8:]
+
+  # Return the subkeys.
+  return subkey1, subkey2
+
+def encrypt(plaintext, key):
+  """Encrypts the given plaintext using the given key.
+
+  Args:
+    plaintext: The plaintext to encrypt.
+    key: The key to use for encrypting the plaintext.
+
+  Returns:
+    The encrypted plaintext.
+  """
+
+  # Convert the plaintext to bytes.
+  plaintext = plaintext.encode("utf-8")
+
+  # Initialize the cipher.
+  cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
+
+  # Encrypt the plaintext.
+  ciphertext = cipher.encrypt(plaintext)
+
+  # Return the encrypted plaintext.
+  return ciphertext.hex()
+
+def main():
+  # Generate a key.
+  key = generate_random_key(16)
+
+  # Generate the subkeys.
+  subkey1, subkey2 = cmac_subkey_generation(key, 64)
+
+  # Print the subkeys.
+  print(subkey1)
+  print(subkey2)
+
+if __name__ == "__main__":
+  main()
