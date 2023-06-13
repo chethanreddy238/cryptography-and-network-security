@@ -1,0 +1,55 @@
+import collections
+import string
+
+def letter_frequency(text):
+  """Counts the frequency of each letter in the text.
+
+  Args:
+    text: The text to count the frequencies of.
+
+  Returns:
+    A dictionary that maps each letter to its frequency.
+  """
+
+  frequencies = collections.Counter(text)
+  return frequencies
+
+def crack_monoalphabetic_substitution_cipher(ciphertext):
+  """Attempts to crack the monoalphabetic substitution cipher.
+
+  Args:
+    ciphertext: The ciphertext to crack.
+
+  Returns:
+    A list of possible plaintexts, in rough order of likelihood.
+  """
+
+  # Count the frequency of each letter in the ciphertext.
+  ciphertext_frequencies = letter_frequency(ciphertext)
+
+  # Create a dictionary that maps each letter in the English alphabet to its frequency.
+  english_frequencies = {
+    letter: frequency / len(text)
+    for letter, frequency in collections.Counter(string.ascii_lowercase).items()
+  }
+
+  # Calculate the score for each possible plaintext.
+  plaintexts = []
+  for plaintext in string.ascii_lowercase:
+    score = 0
+    for letter, frequency in ciphertext_frequencies.items():
+      score += (english_frequencies[plaintext] - frequency) ** 2
+    plaintexts.append((score, plaintext))
+
+  # Sort the plaintexts by their score.
+  plaintexts.sort()
+
+  # Return the top 10 plaintexts.
+  return plaintexts[:10]
+
+if __name__ == "__main__":
+  ciphertext = input("Enter the ciphertext: ")
+  plaintexts = crack_monoalphabetic_substitution_cipher(ciphertext)
+
+  for score, plaintext in plaintexts:
+    print("Score: {} | Plaintext: {}".format(score, plaintext))
