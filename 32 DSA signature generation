@@ -1,0 +1,48 @@
+import random
+
+def generate_random_k():
+  """Generates a random k between 1 and q-1.
+
+  Returns:
+    The random k.
+  """
+  return random.randint(1, q - 1)
+
+def dsa_sign(message, dsa_key):
+  """Signs the given message using the given DSA key.
+
+  Args:
+    message: The message to sign.
+    dsa_key: The DSA key to use for signing the message.
+
+  Returns:
+    The signature of the message.
+  """
+
+  # Generate a random k.
+  k = generate_random_k()
+
+  # Compute the dsa_hash of the message.
+  dsa_hash = dsa_hash(message)
+
+  # Compute the signature.
+  signature = (k * dsa_hash) % q
+
+  # Return the signature.
+  return signature
+
+def main():
+  # Generate a DSA key.
+  dsa_key = generate_dsa_key()
+
+  # Generate a message.
+  message = "Hello, world!"
+
+  # Sign the message.
+  signature = dsa_sign(message, dsa_key)
+
+  # Print the signature.
+  print(signature)
+
+if __name__ == "__main__":
+  main()
