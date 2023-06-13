@@ -1,0 +1,28 @@
+def affine_caesar_cipher(plaintext, a, b):
+  """Encrypts the plaintext using the affine Caesar cipher.
+
+  Args:
+    plaintext: The plaintext to encrypt.
+    a: The encryption key, which must be an integer between 1 and 25.
+    b: The encryption offset, which must be an integer between 0 and 25.
+
+  Returns:
+    The encrypted ciphertext.
+  """
+
+  ciphertext = ""
+  for c in plaintext:
+    ciphertext += chr((ord(c) * a + b) % 26 + ord('A'))
+
+  return ciphertext
+
+def main():
+  plaintext = input("Enter the plaintext: ")
+  a = int(input("Enter the encryption key: "))
+  b = int(input("Enter the encryption offset: "))
+  ciphertext = affine_caesar_cipher(plaintext, a, b)
+
+  print("The encrypted ciphertext is:", ciphertext)
+
+if __name__ == "__main__":
+  main()
